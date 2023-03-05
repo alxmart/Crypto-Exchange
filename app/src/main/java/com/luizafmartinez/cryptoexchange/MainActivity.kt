@@ -4,6 +4,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import com.luizafmartinez.cryptoexchange.api.CotacaoAPI
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -13,11 +18,12 @@ class MainActivity : AppCompatActivity() {
     lateinit var textBitcoin: TextView
     lateinit var textEthereum: TextView
 
-    val retrofit by lazy {
+    val cotacaoAPI: CotacaoAPI by lazy {
         Retrofit.Builder()
             .baseUrl("https://www.mercadobitcoin.net/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+            .create(CotacaoAPI::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +35,22 @@ class MainActivity : AppCompatActivity() {
         textEthereum = findViewById(R.id.tv_ethereum)
 
         btnRecuperar.setOnClickListener {
+            //Permissão de internet necessária !!
+            CoroutineScope(Dispatchers.IO).launch {
 
+              val resposta = cotacaoAPI.recuperarCotacaoBitcoin()
+              if(resposta.isSuccessful) {
+                  val cotacao = resposta.body()
+                  if(cotacao != null) {
+
+                      withContext(Dispatchers.Main) {
+                        textBitcoin.text = "Bitcoin R$ ${cotacao.ticker.last}"
+                      }
+
+                  }
+              }
+
+            }
         }
 
 
