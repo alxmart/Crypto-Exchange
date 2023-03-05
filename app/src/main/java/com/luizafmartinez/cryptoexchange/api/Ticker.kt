@@ -1,4 +1,4 @@
-package com.luizafmartinez.cryptoexchange
+package com.luizafmartinez.cryptoexchange.api
 
 data class Ticker(
     val buy: String,
