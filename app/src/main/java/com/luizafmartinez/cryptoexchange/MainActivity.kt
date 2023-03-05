@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
             //Permissão de internet necessária !!
             CoroutineScope(Dispatchers.IO).launch {
 
+              // Recupera o preço da BITCOIN
               val resposta = cotacaoAPI.recuperarCotacaoBitcoin()
               if(resposta.isSuccessful) {
                   val cotacao = resposta.body()
@@ -46,11 +47,26 @@ class MainActivity : AppCompatActivity() {
                       withContext(Dispatchers.Main) {
                         textBitcoin.text = "Bitcoin R$ ${cotacao.ticker.last}"
                       }
-
                   }
               }
 
-            }
+                // Recupera o preço da ETHEREUM
+                val respostaEthereum = cotacaoAPI.recuperarCotacaoEthereum()
+                if(respostaEthereum.isSuccessful) {
+                    val cotacao = respostaEthereum.body()
+                    if(cotacao != null) {
+
+                        withContext(Dispatchers.Main) {
+                            textEthereum.text = "Ethereum R$ ${cotacao.ticker.last}"
+                        }
+                    }
+                }
+
+            } // Fechamento Coroutine
+
+
+
+
         }
 
 
