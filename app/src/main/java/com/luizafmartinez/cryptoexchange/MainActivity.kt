@@ -4,12 +4,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var btnRecuperar: Button
     lateinit var textBitcoin: TextView
     lateinit var textEthereum: TextView
+
+    val retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://www.mercadobitcoin.net/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
